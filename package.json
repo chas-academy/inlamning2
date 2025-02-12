@@ -1,0 +1,26 @@
+{
+  "name": "inlamning2",
+  "version": "1.0.0",
+  "main": "script.js",
+  "type": "module",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frykhamn/inlamning2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/frykhamn/inlamning2/issues"
+  },
+  "homepage": "https://github.com/frykhamn/inlamning2#readme",
+  "description": "",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "jsdom": "^20.0.0"
+  }
+}
