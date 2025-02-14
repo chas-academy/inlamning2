@@ -1,61 +1,55 @@
 /**
  * @jest-environment jsdom
  */
+import { initSearch } from "./src/script.js";
 
-describe("Search functionality", () => {
-  let searchInput, searchBtn, resultDisplay;
-
+describe("Test av sökfunktionalitet", () => {
   beforeEach(() => {
-    // Tvinga om-laddning av alla moduler så att script.js körs om varje test
-    jest.resetModules();
-
-    // Skapa en minimal HTML-struktur
+    // Nollställ (eller återskapa) DOM inför varje test
     document.body.innerHTML = `
       <input type="text" id="searchInput" />
       <button id="searchBtn">Sök</button>
       <div id="resultDisplay"></div>
     `;
-
-    // Sätt upp en (tom) global variabel 'persone' innan scriptet laddas
-    // (Motsvarande 'var persone = ""' i en vanlig webbläsare.)
-    window.persone = "";
-
-    // Ladda in scriptet EFTER att vi har satt window.persone
-    // Nu kan scriptet referera till 'persone' utan ReferenceError
-    require("./src/script.js");
-
-    // Hämta elementen för snabb åtkomst i testerna
-    searchInput = document.getElementById("searchInput");
-    searchBtn = document.getElementById("searchBtn");
-    resultDisplay = document.getElementById("resultDisplay");
   });
 
-  it("ska visa 'Namn hittades!Erik' om searchValue matchar persone", () => {
-    // Sätt persone till något
-    window.persone = "TestNamn";
+  test("visar 'Namn hittades: X' när namnet finns i arrayen", () => {
+    // 1. Definiera en godtycklig people-array
+    const people = ["Anna", "Johan", "Lisa", "Erik"];
 
-    // Sätt samma text i inputfältet
-    searchInput.value = "TestNamn";
+    // 2. Initiera vår sökfunktionalitet med arrayen
+    initSearch(people);
 
-    // Klicka på knappen
+    // 3. Mata in ett namn som vi vet finns i listan
+    const searchInput = document.getElementById("searchInput");
+    searchInput.value = "Lisa";
+
+    // 4. Simulera klick på "Sök"-knappen
+    const searchBtn = document.getElementById("searchBtn");
     searchBtn.click();
 
-    // Koden loopar över people och eftersom 'found' blir true
-    // men ingen "break" finns kommer sista värdet ('Erik') skrivas ut
-    expect(resultDisplay.textContent).toBe("Namn hittades!Erik");
+    // 5. Förvänta oss att resultatet uppdateras korrekt
+    const resultDisplay = document.getElementById("resultDisplay");
+    expect(resultDisplay.textContent).toBe("Namn hittades: Lisa");
   });
 
-  it("ska visa 'Namn hittades inte.' om searchValue INTE matchar persone", () => {
-    // Sätt persone till ett värde
-    window.persone = "TestNamn";
+  test("visar 'Namn hittades inte.' när namnet saknas i arrayen", () => {
+    // 1. Definiera en godtycklig people-array (kan vara en helt annan)
+    const people = ["Kalle", "Beata", "Zara"];
 
-    // Men sätt input till något annat
-    searchInput.value = "AnnatNamn";
+    // 2. Initiera vår sökfunktionalitet
+    initSearch(people);
 
-    // Klicka på knappen
+    // 3. Mata in ett namn som inte finns i vår (godtyckliga) lista
+    const searchInput = document.getElementById("searchInput");
+    searchInput.value = "Anna"; // Finns inte i ["Kalle", "Beata", "Zara"]
+
+    // 4. Simulera klick
+    const searchBtn = document.getElementById("searchBtn");
     searchBtn.click();
 
-    // Då blir found aldrig true => "Namn hittades inte."
+    // 5. Kontrollera resultat
+    const resultDisplay = document.getElementById("resultDisplay");
     expect(resultDisplay.textContent).toBe("Namn hittades inte.");
   });
 });
