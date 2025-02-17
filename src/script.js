@@ -1,5 +1,5 @@
 // Definera array av namn
-
+let people;
 
 
 export function initSearch(people) { // rör ej denna rad
